@@ -31,8 +31,6 @@ class Zephyr : ZephyrPlugin() {
         lateinit var instance: Zephyr
     }
 
-   // override lateinit var kryoClient: KryoClient
-  //  override lateinit var key: String
     override lateinit var zephyrCommandManager: ZephyrCommandManager
     override lateinit var zephyrModuleManager: ZephyrModuleManager
 
@@ -47,10 +45,7 @@ class Zephyr : ZephyrPlugin() {
 
         System.setProperty("zephyr", "enabled")
 
-        CommandAPI.onEnable();
-
-//        kryoClient = KryoClient("api.feat.su", 15155)
-//        ClientListener()
+        CommandAPI.onEnable()
 
         zephyrCommandManager = ZephyrCommandManagerImpl()
         zephyrModuleManager = ZephyrModuleManagerImpl(
@@ -88,7 +83,7 @@ class Zephyr : ZephyrPlugin() {
                             return
                         }
 
-                        newPacket.chatComponents.write(0, playerMessageReceiveEvent.wrappedChatComponent);
+                        newPacket.chatComponents.write(0, playerMessageReceiveEvent.wrappedChatComponent)
 
                         e.packet = newPacket
                     }
@@ -108,28 +103,6 @@ class Zephyr : ZephyrPlugin() {
 
         zephyrCommandManager.registeredCommands.forEach {
             (it.value as Command).unregister(Bukkit.getCommandMap())
-        }
-
-//        kryoClient.client!!.stop()
-    }
-
-    override fun stop(reason: String) {
-        if (isEnabled) {
-            Bukkit.getScheduler().runTaskAsynchronously(this, Runnable {
-                zephyrModuleManager.loadedModules().forEach {
-                    zephyrModuleManager.unloadModule(it.value, false)
-                }
-
-                zephyrCommandManager.registeredCommands.forEach {
-                    (it.value as Command).unregister(Bukkit.getCommandMap())
-                }
-
-               // kryoClient.client!!.stop()
-
-                logger.severe(reason)
-
-                Bukkit.getPluginManager().disablePlugin(this)
-            })
         }
     }
 

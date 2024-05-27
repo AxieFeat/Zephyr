@@ -17,9 +17,6 @@ abstract class ZephyrPlugin : JavaPlugin() {
      * Версия Zephyr
      */
     val zephyrVersion = "1.3-BETA5"
-//    val session = UUID.randomUUID()
-//    val hwid = info()
-//    val hash = jarFile.getChecksum() ?: ""
 
     companion object {
         lateinit var instance: ZephyrPlugin
@@ -29,7 +26,6 @@ abstract class ZephyrPlugin : JavaPlugin() {
         instance = this
     }
 
-   // abstract var key: String
     /**
      * Объект [ZephyrCommandManager]
      */
@@ -39,13 +35,10 @@ abstract class ZephyrPlugin : JavaPlugin() {
      * Объект [ZephyrModuleManager]
      */
     abstract var zephyrModuleManager: ZephyrModuleManager
-    //abstract var kryoClient: KryoClient
 
     protected abstract fun enable()
     protected abstract fun disable()
     protected abstract fun reload()
-
-    abstract fun stop(reason: String)
 
     abstract val registeredModuleCommands: MutableList<Pair<ZephyrModule, Any>>
     abstract fun createModuleCommandManagerInstanceFor(module: ZephyrModule): ZephyrModuleCommandManager
@@ -54,10 +47,6 @@ abstract class ZephyrPlugin : JavaPlugin() {
 
     override fun onEnable() {
         enable()
-
-//        if (!kryoClient.client!!.isConnected) {
-//            Bukkit.getPluginManager().disablePlugin(this)
-//        }
     }
 
     override fun onDisable() {

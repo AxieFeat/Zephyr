@@ -1,7 +1,4 @@
-D:\Projects\Zephyr\API\src\main\java\me\arial\zephyr\api\event\client\ClientConnectEvent.java
 D:\Projects\Zephyr\API\src\main\java\me\arial\zephyr\api\event\module\ModuleReloadEvent.java
-D:\Projects\Zephyr\API\src\main\java\me\arial\zephyr\api\event\client\ClientDisconnectEvent.java
 D:\Projects\Zephyr\API\src\main\java\me\arial\zephyr\api\event\player\PlayerMessageReceiveEvent.java
-D:\Projects\Zephyr\API\src\main\java\me\arial\zephyr\api\event\client\ClientReceiveEvent.java
 D:\Projects\Zephyr\API\src\main\java\me\arial\zephyr\api\event\module\ModuleUnloadEvent.java
 D:\Projects\Zephyr\API\src\main\java\me\arial\zephyr\api\event\module\ModuleLoadEvent.java
