@@ -1,0 +1,10 @@
+# Уровень дебага
+# Доступные уровни:
+#  NONE
+#  LOW
+#  MEDIUM
+#  HIGH
+debug-level: NONE
+
+# Ивент получения сообщения игроком (Для работы нужен ProtocolLib)
+player-message-receive-event: false

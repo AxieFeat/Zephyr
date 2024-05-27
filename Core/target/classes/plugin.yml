@@ -1,0 +1,17 @@
+name: "Zephyr"
+version: "1.3-BETA5"
+main: me.arial.zephyr.core.Zephyr
+author: "AxieFeat"
+api-version: 1.16
+load: POSTWORLD
+
+softdepend:
+  - Vault
+  - Essentials
+  - CMI
+  - WorldEdit
+  - WorldGuard
+  - PlayerPoints
+  - PlaceholderAPI
+  - ProtocolLib
+  - CommandAPI

@@ -1,0 +1,4 @@
+me\arial\zephyr\api\event\module\ModuleReloadEvent.class
+me\arial\zephyr\api\event\module\ModuleLoadEvent.class
+me\arial\zephyr\api\event\module\ModuleUnloadEvent.class
+me\arial\zephyr\api\event\player\PlayerMessageReceiveEvent.class
