@@ -3,12 +3,12 @@ package me.arial.zephyr.core.command.impl
 import dev.jorel.commandapi.CommandAPICommand
 import dev.jorel.commandapi.arguments.TextArgument
 import dev.jorel.commandapi.executors.CommandExecutor
-import me.arial.zephyr.api.Extension.Companion.sendColoredMessage
 import me.arial.zephyr.api.command.CommandInfo
 import me.arial.zephyr.api.command.ZephyrCommand
 import me.arial.zephyr.api.command.brigadier.BrigadierCompleter
 import me.arial.zephyr.api.command.brigadier.WithPermission
 import me.arial.zephyr.api.prefix
+import me.arial.zephyr.api.sendColoredMessage
 import me.arial.zephyr.core.Zephyr
 import org.bukkit.command.CommandSender
 import java.io.File

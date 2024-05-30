@@ -1,7 +1,7 @@
 package me.arial.zephyr.api.configuration
 
 import me.arial.zephyr.api.text.ColorParser
-import me.arial.zephyr.api.Extension.Companion.getLangComponent
+import me.arial.zephyr.api.getLangComponent
 import me.arial.zephyr.api.module.ZephyrModule
 import me.arial.zephyr.api.text.LangComponent
 import org.apache.commons.lang.Validate

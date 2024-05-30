@@ -53,7 +53,7 @@
                             <relocations>
                                 <relocation>
                                     <pattern>net.kyori.</pattern>
-                                    <shadedPattern>me.arial.libs.kyori.</shadedPattern>
+                                    <shadedPattern>me.arial.zephyr.libs.kyori.</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

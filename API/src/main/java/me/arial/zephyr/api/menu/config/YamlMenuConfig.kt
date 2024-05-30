@@ -1,8 +1,8 @@
 package me.arial.zephyr.api.menu.config
 
-import me.arial.zephyr.api.Extension.Companion.parseColor
 import me.arial.zephyr.api.menu.item.BasicItem
 import me.arial.zephyr.api.module.ZephyrModule
+import me.arial.zephyr.api.parseColor
 import org.bukkit.configuration.file.FileConfiguration
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin

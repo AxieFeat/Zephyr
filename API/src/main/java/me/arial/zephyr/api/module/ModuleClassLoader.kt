@@ -1,8 +1,8 @@
 package me.arial.zephyr.api.module
 
-import me.arial.zephyr.api.Extension.Companion.startWith
 import me.arial.zephyr.api.ZephyrPlugin
 import me.arial.zephyr.api.module.exception.ModuleInitException
+import me.arial.zephyr.api.startWith
 import org.bukkit.Bukkit
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File

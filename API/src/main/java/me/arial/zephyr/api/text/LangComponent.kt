@@ -1,7 +1,7 @@
 package me.arial.zephyr.api.text
 
-import me.arial.zephyr.api.Extension.Companion.replace
-import me.arial.zephyr.api.Extension.Companion.replaceWithParse
+import me.arial.zephyr.api.replace
+import me.arial.zephyr.api.replaceWithParse
 import me.arial.zephyr.api.sound.WrappedSound
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.minimessage.MiniMessage

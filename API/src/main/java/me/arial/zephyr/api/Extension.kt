@@ -27,13 +27,6 @@ import java.util.*
 import java.util.concurrent.Callable
 import java.util.regex.Pattern
 
-/**
- * Класс с разными утилитами
- */
-class Extension {
-
-    companion object {
-
         private val miniMessage = MiniMessage.builder().build()
         private val bukkitAudiences = BukkitAudiences.builder(ZephyrPlugin.instance).build()
 
@@ -787,5 +780,3 @@ class Extension {
 
             return taskNum
         }
-    }
-}

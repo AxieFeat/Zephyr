@@ -1,6 +1,6 @@
 package me.arial.zephyr.api.debug
 
-import me.arial.zephyr.api.Extension.Companion.sendColoredMessage
+import me.arial.zephyr.api.sendColoredMessage
 import org.bukkit.Bukkit
 import org.bukkit.entity.Player
 

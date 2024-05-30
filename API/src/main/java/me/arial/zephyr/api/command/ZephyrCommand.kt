@@ -2,16 +2,12 @@ package me.arial.zephyr.api.command
 
 import com.mojang.brigadier.tree.LiteralCommandNode
 import dev.jorel.commandapi.CommandAPICommand
-import me.arial.zephyr.api.Extension.Companion.parseArgs
-import me.arial.zephyr.api.Extension.Companion.sendColoredMessage
-import me.arial.zephyr.api.Extension.Companion.sendLangComponent
-import me.arial.zephyr.api.ZephyrPlugin
+import me.arial.zephyr.api.*
 import me.arial.zephyr.api.command.brigadier.BrigadierCompleter
 import me.arial.zephyr.api.command.brigadier.WithPermission
 import me.arial.zephyr.api.command.brigadier.WithoutPermission
 import me.arial.zephyr.api.command.commodore.CommodoreCompleter
 import me.arial.zephyr.api.command.commodore.CommodorePermission
-import me.arial.zephyr.api.prefix
 import me.arial.zephyr.api.text.LangComponent
 import me.lucko.commodore.CommodoreProvider
 import org.bukkit.Bukkit
