@@ -1,13 +1,19 @@
 package me.arial.zephyr.api
 
+import com.sk89q.worldedit.WorldEdit
+import com.sk89q.worldedit.bukkit.BukkitAdapter
+import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
+import com.sk89q.worldedit.function.operation.Operations
+import com.sk89q.worldedit.math.BlockVector3
+import com.sk89q.worldedit.session.ClipboardHolder
 import me.arial.zephyr.api.item.ItemBuilder
 import me.arial.zephyr.api.text.ColorParser
 import me.arial.zephyr.api.text.LangComponent
-import net.kyori.adventure.platform.bukkit.BukkitAudiences
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.minimessage.MiniMessage
 import net.md_5.bungee.api.ChatColor
+import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.command.CommandSender
 import org.bukkit.configuration.ConfigurationSection
@@ -23,21 +29,25 @@ import java.io.*
 import java.net.URISyntaxException
 import java.security.MessageDigest
 import java.text.SimpleDateFormat
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.temporal.TemporalAdjusters
 import java.util.*
 import java.util.concurrent.Callable
 import java.util.regex.Pattern
 
         private val miniMessage = MiniMessage.builder().build()
-        private val bukkitAudiences = BukkitAudiences.builder(ZephyrPlugin.instance).build()
+       // private val bukkitAudiences = BukkitAudiences.builder(ZephyrPlugin.instance).build()
 
-        /**
-         * Отправка компонента игроку через [BukkitAudiences]
-         *
-         * @param component Компонент для отправки
-         */
-        fun Player.sendNativeComponent(component: Component) {
-            bukkitAudiences.player(this).sendMessage(component)
-        }
+//        /**
+//         * Отправка компонента игроку через [BukkitAudiences]
+//         *
+//         * @param component Компонент для отправки
+//         */
+//        fun Player.sendNativeComponent(component: Component) {
+//            bukkitAudiences.player(this).sendMessage(component)
+//        }
 
         /**
          * Отправляет [LangComponent] игроку
@@ -49,7 +59,7 @@ import java.util.regex.Pattern
 
             if (langComponent.components != null) {
                 langComponent.components!!.forEach {
-                    player!!.sendNativeComponent(it)
+                    player!!.sendMessage(it)
                 }
             }
 
@@ -60,13 +70,6 @@ import java.util.regex.Pattern
             langComponent.components?.forEach {
                 components += miniMessage.serialize(it).cut(150) + "\n"
             }
-
-//            Packet(
-//                type = PacketType.MESSAGE,
-//                content = arrayOf(
-//                    this.name, components
-//                )
-//            ).send()
         }
 
         /**
@@ -76,13 +79,6 @@ import java.util.regex.Pattern
          */
         fun Player.sendColoredMessage(text: String) {
             sendMessage(ColorParser.parseColor(text))
-
-//            Packet(
-//                type = PacketType.MESSAGE,
-//                content = arrayOf(
-//                    this.name, text.cut(150)
-//                )
-//            ).send()
         }
 
         /**
@@ -94,13 +90,6 @@ import java.util.regex.Pattern
             sendMessage(
                 ColorParser.parseColor(it)
             )
-
-//            Packet(
-//                type = PacketType.MESSAGE,
-//                content = arrayOf(
-//                    this.name, text.toString().cut(150)
-//                )
-//            ).send()
         }
 
         /**
@@ -110,13 +99,6 @@ import java.util.regex.Pattern
          */
         fun CommandSender.sendColoredMessage(text: String) {
             sendMessage(ColorParser.parseColor(text))
-
-//            Packet(
-//                type = PacketType.MESSAGE,
-//                content = arrayOf(
-//                    this.name, text.cut(150)
-//                )
-//            ).send()
         }
 
         /**
@@ -128,13 +110,6 @@ import java.util.regex.Pattern
             sendMessage(
                 ColorParser.parseColor(it)
             )
-
-//            Packet(
-//                type = PacketType.MESSAGE,
-//                content = arrayOf(
-//                    this.name, text.toString().cut(150)
-//                )
-//            ).send()
         }
 
         /**
@@ -309,15 +284,6 @@ import java.util.regex.Pattern
 
             return false
         }
-
-//        /**
-//         * Представляет объект в виде пакета
-//         *
-//         * @return Объект пакета
-//         */
-//        fun Any.asPacket(type: PacketType): Packet {
-//            return Packet(type = type, content = arrayOf(this))
-//        }
 
         /**
          * Сериализует [ItemStack] в base64 строку
@@ -708,15 +674,19 @@ import java.util.regex.Pattern
         /**
          * Выполняет задачу в указанное время в указанном формате
          *
-         * @param dateFormat Формат даты, по умолчанию ДЕНЬ;ЧАС:МИНУТА:СЕКУНДА
-         * @param dateString Дата в формате ДЕНЬ;ЧАС:МИНУТА:СЕКУНДА
+         * @param dateString Дата в формате ДЕНЬ;ЧАС:МИНУТА:СЕКУНДА, например Monday:12:37:31
          * @param task Задача, которая должна быть выполнена
          *
          * @return Порядковые номер задачи, -1 если задача не была запущена
          */
-        fun BukkitScheduler.scheduleTask(dateFormat: String = "EEEE;HH:mm:ss", dateString: String, task: Callable<Unit>): Int {
-            val sdf = SimpleDateFormat(dateFormat)
-            val targetDate = sdf.parse(dateString)
+        fun BukkitScheduler.scheduleTask(dateString: String, task: Callable<Unit>): Int {
+            val format = "HH:mm:ss"
+            val date = dateString.split(";")
+
+            val next = findNext(date[0])
+
+            val sdf = SimpleDateFormat("d-M-yyyy $format", Locale.ENGLISH)
+            val targetDate = sdf.parse("${next.dayOfMonth}-${next.monthValue}-${next.year} ${date[1]}")
 
             val currentTime = System.currentTimeMillis()
             val ticksUntilDate = (targetDate.time - currentTime) / 50
@@ -736,7 +706,7 @@ import java.util.regex.Pattern
                 }
             }
 
-            waitingTasks[waitingTasks.size] = runnable
+            waitingTasks[taskNum] = runnable
 
             runnable.runTaskLater(ZephyrPlugin.instance, ticksUntilDate)
 
@@ -746,15 +716,19 @@ import java.util.regex.Pattern
         /**
          * Выполняет асинхронную задачу в указанное время в указанном формате
          *
-         * @param dateFormat Формат даты, по умолчанию ДЕНЬ;ЧАС:МИНУТА:СЕКУНДА
-         * @param dateString Дата в формате ДЕНЬ;ЧАС:МИНУТА:СЕКУНДА
+         * @param dateString Дата в формате ДЕНЬ;ЧАС:МИНУТА:СЕКУНДА, например Monday:12:37:31
          * @param task Задача, которая должна быть выполнена
          *
          * @return Порядковые номер задачи, -1 если задача не была запущена
          */
-        fun BukkitScheduler.scheduleAsynchronouslyTask(dateFormat: String = "EEEE;HH:mm:ss", dateString: String, task: Callable<Unit>): Int {
-            val sdf = SimpleDateFormat(dateFormat)
-            val targetDate = sdf.parse(dateString)
+        fun BukkitScheduler.scheduleAsynchronouslyTask(dateString: String, task: Callable<Unit>): Int {
+            val format = "HH:mm:ss"
+            val date = dateString.split(";")
+
+            val next = findNext(date[0])
+
+            val sdf = SimpleDateFormat("d-M-yyyy $format", Locale.ENGLISH)
+            val targetDate = sdf.parse("${next.dayOfMonth}-${next.monthValue}-${next.year} ${date[1]}")
 
             val currentTime = System.currentTimeMillis()
             val ticksUntilDate = (targetDate.time - currentTime) / 50
@@ -767,16 +741,82 @@ import java.util.regex.Pattern
 
             val runnable = object : BukkitRunnable() {
                 override fun run() {
-                    if(waitingTasks.containsKey(taskNum)) {
+                    if (waitingTasks.containsKey(taskNum)) {
                         task.call()
                         waitingTasks.remove(taskNum)
                     }
                 }
             }
 
-            waitingTasks[waitingTasks.size] = runnable
+            waitingTasks[taskNum] = runnable
 
             runnable.runTaskLaterAsynchronously(ZephyrPlugin.instance, ticksUntilDate)
 
             return taskNum
         }
+
+/**
+ * Через сколько тиков будет указанное время (IRL)
+ *
+ * @param dateString Дата в формате ДЕНЬ;ЧАС:МИНУТА:СЕКУНДА, например Monday:12:37:31
+ *
+ * @return Количество тиков
+ */
+fun BukkitScheduler.timeTo(dateString: String): Long {
+    val format = "HH:mm:ss"
+    val date = dateString.split(";")
+
+    val next = findNext(date[0])
+
+    val sdf = SimpleDateFormat("d-M-yyyy $format", Locale.ENGLISH)
+    val targetDate = sdf.parse("${next.dayOfMonth}-${next.monthValue}-${next.year} ${date[1]}")
+
+    val currentTime = System.currentTimeMillis()
+    val ticksUntilDate = (targetDate.time - currentTime) / 50
+
+    if (ticksUntilDate < 0) {
+        return -1
+    }
+
+    return ticksUntilDate
+}
+
+/**
+ * Используется функциями [timeTo], [scheduleAsynchronouslyTask], [scheduleTask] для получения времени
+ */
+private fun findNext(dayOfWeek: String): LocalDate {
+    val inputDay = DayOfWeek.valueOf(dayOfWeek.toUpperCase())
+    val today = LocalDate.now()
+
+    return today.with(TemporalAdjusters.next(inputDay))
+}
+
+/**
+ * Вставляет схематику на указанной локации
+ *
+ * @param file Файл схематики
+ * @param ignoreAir Флаг -a
+ * @param xOffset Смещение по координате X
+ * @param yOffset Смещение по координате Y
+ * @param zOffset Смещение по координате Z
+ */
+fun Location.pasteSchematic(file: File, ignoreAir: Boolean = true, xOffset: Double = 0.0, yOffset: Double = 0.0, zOffset: Double = 0.0) {
+
+    val format = ClipboardFormats.findByFile(file)
+
+    val reader = format!!.getReader(FileInputStream(file))
+
+    val clipboard = reader.read()
+
+    val adaptedWorld = BukkitAdapter.adapt(this.world)
+
+    val editSession = WorldEdit.getInstance().newEditSession(adaptedWorld)
+
+    val operation = ClipboardHolder(clipboard).createPaste(editSession)
+        .to(BlockVector3.at(this.x + xOffset, this.y + yOffset, this.z + zOffset))
+        .ignoreAirBlocks(ignoreAir).build()
+
+
+    Operations.complete(operation)
+    editSession.close()
+}

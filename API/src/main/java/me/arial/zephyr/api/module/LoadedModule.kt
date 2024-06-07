@@ -24,6 +24,7 @@ data class LoadedModule(
     val depend: Array<String>,
     val soft: Array<String>
 ) {
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false

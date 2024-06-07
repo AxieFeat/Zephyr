@@ -208,4 +208,8 @@ abstract class ZephyrCommand : Command("") {
     fun unregister() {
         enabled = false
     }
+
+    open fun onCommand(sender: CommandSender, name: String, command: Command, args: Array<out String>?): String? = null
+    open fun onCommandComplete(sender: CommandSender, name: String, command: Command, args: Array<out String>?): List<String> = mutableListOf()
+    open fun commodoreCompleter(): LiteralCommandNode<*>? = null
 }
