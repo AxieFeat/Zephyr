@@ -16,7 +16,7 @@ abstract class ZephyrPlugin : JavaPlugin() {
     /**
      * Версия Zephyr
      */
-    val zephyrVersion = "1.3-BETA6"
+    val zephyrVersion = "1.3.0"
 
     companion object {
         lateinit var instance: ZephyrPlugin
