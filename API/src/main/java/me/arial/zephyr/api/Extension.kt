@@ -12,7 +12,6 @@ import me.arial.zephyr.api.text.LangComponent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.minimessage.MiniMessage
-import net.md_5.bungee.api.ChatColor
 import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.command.CommandSender
@@ -31,23 +30,23 @@ import java.security.MessageDigest
 import java.text.SimpleDateFormat
 import java.time.DayOfWeek
 import java.time.LocalDate
-import java.time.LocalDateTime
 import java.time.temporal.TemporalAdjusters
 import java.util.*
 import java.util.concurrent.Callable
 import java.util.regex.Pattern
 
-        private val miniMessage = MiniMessage.builder().build()
+        private val miniMessage = MiniMessage.miniMessage()
        // private val bukkitAudiences = BukkitAudiences.builder(ZephyrPlugin.instance).build()
 
-//        /**
-//         * Отправка компонента игроку через [BukkitAudiences]
-//         *
-//         * @param component Компонент для отправки
-//         */
-//        fun Player.sendNativeComponent(component: Component) {
-//            bukkitAudiences.player(this).sendMessage(component)
-//        }
+        /**
+         * Отправка компонента игроку через [BukkitAudiences]
+         *
+         * @param component Компонент для отправки
+         */
+        fun Player.sendNativeComponent(component: Component) {
+           // bukkitAudiences.player(this).sendMessage(component)
+            this.sendMessage(component)
+        }
 
         /**
          * Отправляет [LangComponent] игроку
@@ -59,7 +58,7 @@ import java.util.regex.Pattern
 
             if (langComponent.components != null) {
                 langComponent.components!!.forEach {
-                    player!!.sendMessage(it)
+                    player!!.sendNativeComponent(it)
                 }
             }
 
@@ -317,6 +316,73 @@ import java.util.regex.Pattern
             return LangComponent.deserialize(this, path)
         }
 
+/**
+ * [Component] из [FileConfiguration]
+ *
+ * @param path Путь в конфиге
+ *
+ * @return Объект [Component]
+ */
+fun FileConfiguration.getComponent(path: String): Component {
+            return miniMessage.deserialize(this.getString(path)!!)
+        }
+
+/**
+ * Лист [Component]'ов из [FileConfiguration]
+ *
+ * @param path Путь в конфиге
+ *
+ * @return Лист [Component]'ов
+ */
+fun FileConfiguration.getComponentList(path: String): List<Component> {
+    return this.getStringList(path).map { miniMessage.deserialize(it) }
+}
+
+/**
+ * [Component] из [ConfigurationSection]
+ *
+ * @param path Путь в конфиге
+ *
+ * @return Объект [Component]
+ */
+fun ConfigurationSection.getComponent(path: String?, def: String? = null): Component? {
+    if (path == null) return null
+
+    val str = this.getString(path, def) ?: return null
+
+    return miniMessage.deserialize(str)
+}
+
+/**
+ * Лист [Component]'ов из [ConfigurationSection]
+ *
+ * @param path Путь в конфиге
+ *
+ * @return Лист [Component]'ов
+ */
+fun ConfigurationSection.getComponentList(path: String): List<Component> {
+    return this.getStringList(path).map { miniMessage.deserialize(it) }
+}
+
+/**
+ * Десериализует из строки [Component]
+ *
+ * @return Объект [Component]
+ */
+fun String.deserializeComponent(): Component {
+    return miniMessage.deserialize(this)
+}
+
+/**
+ * Серилизует [Component] в строку
+ *
+ * @return Строка
+ */
+fun Component.serializeComponent(): String {
+    return miniMessage.serialize(this)
+}
+
+
         /**
          * Объект [ItemBuilder] из секции конфигурации
          *
@@ -324,20 +390,19 @@ import java.util.regex.Pattern
          *
          * @return Объект [ItemBuilder]
          */
-        fun ConfigurationSection.getItemBuilder(parseColor: Boolean = true): ItemBuilder {
-            return ItemBuilder.fromConfig(this, parseColor)
+        fun ConfigurationSection.getItemBuilder(): ItemBuilder {
+            return ItemBuilder.fromConfig(this)
         }
 
         /**
          * Объект [ItemBuilder] из конфигурации
          *
          * @param path Путь в конфиге
-         * @param parseColor Парсить ли цвета
          *
          * @return Объект [ItemBuilder]
          */
-        fun FileConfiguration.getItemBuilder(path: String, parseColor: Boolean = true): ItemBuilder {
-            return ItemBuilder.fromConfig(this.getConfigurationSection(path)!!, parseColor)
+        fun FileConfiguration.getItemBuilder(path: String): ItemBuilder {
+            return ItemBuilder.fromConfig(this.getConfigurationSection(path)!!)
         }
 
         /**
@@ -345,6 +410,7 @@ import java.util.regex.Pattern
          *
          * @return Изменённый массив
          */
+        @Deprecated("not work!")
         fun Array<out String>?.parseArgs(): Array<out String>? {
             if (this == null) return null
 
@@ -457,7 +523,7 @@ import java.util.regex.Pattern
         }
 
         /**
-         * Парсит &#RRGGBB в формат MiniMessage
+         * Парсит &#RRGGBB и & в формат MiniMessage
          *
          * @return Изменённая строка
          */
@@ -473,7 +539,93 @@ import java.util.regex.Pattern
             matcher.appendTail(sb)
             val hexColored = sb.toString()
 
-            return ChatColor.translateAlternateColorCodes('&', hexColored)
+            return hexColored
+                .replace("&0", "<black>")
+                .replace("&1", "<dark_blue>")
+                .replace("&2", "<dark_green>")
+                .replace("&3", "<dark_aqua>")
+                .replace("&4", "<dark_red>")
+                .replace("&5", "<dark_purple>")
+                .replace("&6", "<gold>")
+                .replace("&7", "<gray>")
+                .replace("&8", "<dark_gray>")
+                .replace("&9", "<blue>")
+                .replace("&a", "<green>")
+                .replace("&b", "<aqua>")
+                .replace("&c", "<red>")
+                .replace("&d", "<light_purple>")
+                .replace("&e", "<yellow>")
+                .replace("&f", "<white>")
+                .replace("&k", "<reset>")
+                .replace("&l", "<b>")
+                .replace("&m", "<st>")
+                .replace("&n", "<u>")
+                .replace("&o", "<i>")
+                .replace("&r", "<white>")
+        }
+
+/**
+ * Удаляет цвета формата [MiniMessage]
+ *
+ * @return Новая строка
+ */
+        fun String.stripMiniMessageColors(): String {
+    val matcher = Pattern.compile("(<color:[0-9a-fA-F]{6}>)").matcher(this)
+    val sb = StringBuilder()
+
+    while (matcher.find()) {
+        matcher.appendReplacement(sb, "")
+    }
+
+    matcher.appendTail(sb)
+    val hexColored = sb.toString()
+
+    return hexColored
+        .replace("</color>", "")
+        .replace("<black>", "")
+        .replace("</black>", "")
+        .replace("<dark_blue>", "")
+        .replace("</dark_blue>", "")
+        .replace("<dark_green>", "")
+        .replace("</dark_green>", "")
+        .replace("<dark_aqua>", "")
+        .replace("</dark_aqua>", "")
+        .replace("<dark_red>", "")
+        .replace("</dark_red>", "")
+        .replace("<dark_purple>", "")
+        .replace("</dark_purple>", "")
+        .replace("<gold>", "")
+        .replace("</gold>", "")
+        .replace("<gray>", "")
+        .replace("</gray>", "")
+        .replace("<dark_gray>", "")
+        .replace("</dark_gray>", "")
+        .replace("<blue>", "")
+        .replace("</blue>", "")
+        .replace("<green>", "")
+        .replace("</green>", "")
+        .replace("<aqua>", "")
+        .replace("</aqua>", "")
+        .replace("<red>", "")
+        .replace("</red>", "")
+        .replace("<light_purple>", "")
+        .replace("</light_purple>", "")
+        .replace("<yellow>", "")
+        .replace("</yellow>", "")
+        .replace("<white>", "")
+        .replace("</white>", "")
+        .replace("<b>", "")
+        .replace("</b>", "")
+        .replace("<st>", "")
+        .replace("</st>", "")
+        .replace("<u>", "")
+        .replace("</u>", "")
+        .replace("<i>", "")
+        .replace("</i>", "")
+        .replace("<white>", "")
+        .replace("</white>", "")
+        .replace("<reset>", "")
+        .replace("</reset>", "")
         }
 
         /**

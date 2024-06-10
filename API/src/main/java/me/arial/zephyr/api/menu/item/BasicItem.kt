@@ -1,5 +1,9 @@
 package me.arial.zephyr.api.menu.item
 
+import me.arial.zephyr.api.deserializeComponent
+import me.arial.zephyr.api.getComponent
+import me.arial.zephyr.api.getComponentList
+import me.arial.zephyr.api.serializeComponent
 import me.arial.zephyr.api.text.ColorParser
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
@@ -196,7 +200,7 @@ abstract class BasicItem(
         section.set("material", item.type.toString())
 
         if (meta.hasDisplayName()) {
-            section.set("name", meta.displayName)
+            section.set("name", meta.displayName()!!.serializeComponent())
         }
 
         if (base64Head != null) section.set("skull-meta", base64Head)
@@ -260,7 +264,7 @@ abstract class BasicItem(
         result["material"] = item.type
 
         if (meta.hasDisplayName()) {
-            result["name"] = meta.displayName
+            result["name"] = meta.displayName()!!.serializeComponent()
         }
 
         if (base64Head != null) {
@@ -270,7 +274,7 @@ abstract class BasicItem(
         result["durability"] = item.durability
 
         if (meta.hasLore()) {
-            result["lore"] = meta.lore!!
+            result["lore"] = meta.lore()!!.map { it.serializeComponent() }
         }
 
         if (meta is PotionMeta) {
@@ -367,13 +371,12 @@ abstract class BasicItem(
             }
 
             if (section.contains("lore")) {
-                val lines: MutableList<String> = mutableListOf()
+                val lines: MutableList<Component> = mutableListOf()
 
-                section.getStringList("lore").forEach {
-                    lines.add(ColorParser.parseColor(it))
+                section.getComponentList("lore").forEach {
+                    lines.add(it)
                 }
-
-                meta.lore = lines
+                meta.lore(lines)
             }
 
             val basicItemMeta: MutableMap<String, String> = mutableMapOf()
@@ -399,7 +402,7 @@ abstract class BasicItem(
             }
 
             if (section.contains("name")) {
-                meta.setDisplayName(ColorParser.parseColor(section.getString("name")!!))
+                meta.displayName(section.getComponent("name"))
             }
 
             if (section.contains("item-flags")) {
@@ -456,7 +459,8 @@ abstract class BasicItem(
             }
 
             if (map.containsKey("lore")) {
-                meta.lore = map["lore"] as MutableList<String>
+                val lines = (map["lore"] as MutableList<String>).map { it.deserializeComponent() }
+                meta.lore(lines)
             }
 
             val basicItemMeta: MutableMap<String, String> = mutableMapOf()
@@ -475,7 +479,7 @@ abstract class BasicItem(
             }
 
             if (map.containsKey("name")) {
-                meta.setDisplayName(ColorParser.parseColor(map["name"] as String))
+                meta.displayName((map["name"] as String).deserializeComponent())
             }
 
             if (map.containsKey("item-flags")) {

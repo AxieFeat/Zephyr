@@ -176,7 +176,7 @@ data class LangComponent(
             )
         }
 
-        private val miniMessage = MiniMessage.builder().build()
+        private val miniMessage = MiniMessage.miniMessage()
 
         private fun deserializeComponent(component: String): Component {
             return miniMessage.deserialize(component)

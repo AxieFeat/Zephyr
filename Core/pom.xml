@@ -50,12 +50,12 @@
                             <finalName>Zephyr</finalName>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <relocations>
-                                <relocation>
-                                    <pattern>net.kyori.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.kyori.</shadedPattern>
-                                </relocation>
-                            </relocations>
+<!--                            <relocations>-->
+<!--                                <relocation>-->
+<!--                                    <pattern>net.kyori.</pattern>-->
+<!--                                    <shadedPattern>me.arial.zephyr.libs.kyori.</shadedPattern>-->
+<!--                                </relocation>-->
+<!--                            </relocations>-->
                         </configuration>
                     </execution>
                 </executions>

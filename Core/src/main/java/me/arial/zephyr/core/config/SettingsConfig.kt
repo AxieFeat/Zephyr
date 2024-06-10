@@ -6,9 +6,6 @@ import me.arial.zephyr.api.debug.debugLevel
 import me.arial.zephyr.core.Zephyr
 
 class SettingsConfig : Config(Zephyr.instance, "settings.yml", fromJar = true) {
-    override fun onFirstLoad() {
-
-    }
 
     override fun checkDefault() {
         setIfNotExists("player-message-receive-event", false)
@@ -19,4 +16,5 @@ class SettingsConfig : Config(Zephyr.instance, "settings.yml", fromJar = true) {
 
     val playerMessageReceiveEventEnabled: Boolean
         get() = config.getBoolean("player-message-receive-event")
+
 }

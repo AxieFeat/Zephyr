@@ -1,19 +1,14 @@
 package me.arial.zephyr.api.configuration
 
-import me.arial.zephyr.api.text.ColorParser
 import me.arial.zephyr.api.getLangComponent
 import me.arial.zephyr.api.module.ZephyrModule
 import me.arial.zephyr.api.text.LangComponent
-import org.apache.commons.lang.Validate
-import org.bukkit.Bukkit
-import org.bukkit.configuration.InvalidConfigurationException
+import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.IOException
-import java.util.logging.Level
-import java.util.stream.Collectors
 
 /**
  * Класс для работы с файлами конфигурации
@@ -22,6 +17,10 @@ abstract class Config private constructor(
     folder: File?,
     name: String
 ) {
+
+    companion object {
+        val miniMessage = MiniMessage.builder().build()
+    }
 
     /**
      * Файл конфигурации
@@ -38,6 +37,7 @@ abstract class Config private constructor(
      */
     private val langComponents: MutableMap<String, LangComponent> = mutableMapOf()
 
+    @Deprecated("use constructor without 'parseColor'")
     constructor(
         zephyrModule: ZephyrModule,
         name: String,
@@ -61,7 +61,7 @@ abstract class Config private constructor(
             }
         }
 
-        this.config = loadConfiguration(rawConfig, parseColor)
+        this.config = loadConfiguration(rawConfig)
 
         if (parseLangComponent) {
             config.getConfigurationSection("")!!.getKeys(true).forEach { key ->
@@ -117,27 +117,90 @@ abstract class Config private constructor(
         if (isFirstLoad) onFirstLoad()
         checkDefault()
         save()
+    }
 
+    constructor(
+        zephyrModule: ZephyrModule,
+        name: String,
+        fromJar: Boolean = false,
+        parseLangComponent: Boolean = false
+    ): this(zephyrModule.dataFolder, name) {
+        var isFirstLoad = false
+        if (!rawConfig.exists()) {
+            try {
+                if (fromJar) {
 
-//        ZephyrPlugin.instance!!.kryoClient!!.sendPacket(
-//            Packet(
-//                type = PacketType.CONFIG_INIT,
-//                content = arrayOf(
-//                    zephyrModule.info!!.name,
-//                    zephyrModule.info!!.version,
-//                    zephyrModule.info!!.reloadable,
-//                    zephyrModule.info!!.authors,
-//                    "path ${rawConfig.path}",
-//                    "fromJar $fromJar",
-//                    "parseColor $parseColor",
-//                    "parseLangComponent $parseLangComponent"
-//                )
-//            )
-//        )
+                    zephyrModule.saveResource(name, false)
+
+                } else {
+                    rawConfig.createNewFile()
+                }
+                isFirstLoad = true
+            } catch (e: IOException) {
+                throw RuntimeException(e)
+            }
+        }
+
+        this.config = loadConfiguration(rawConfig)
+
+        if (parseLangComponent) {
+            config.getConfigurationSection("")!!.getKeys(true).forEach { key ->
+                var finalKey = key
+
+                when {
+                    key.endsWith(".message") -> {
+                        finalKey = finalKey.replace(".message", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+
+                    key.endsWith(".sound") -> {
+                        finalKey = finalKey.replace(".sound", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+
+                    key.endsWith(".sound.type") -> {
+                        finalKey = finalKey.replace(".sound.type", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+
+                    key.endsWith(".sound.volume") -> {
+                        finalKey = finalKey.replace(".sound.volume", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+
+                    key.endsWith(".sound.pitch") -> {
+                        finalKey = finalKey.replace(".sound.pitch", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+
+                    else -> {
+                        if (config.isList(finalKey) || config.isString(finalKey)) {
+                            if (!langComponents.containsKey(finalKey)) {
+                                langComponents[finalKey] = config.getLangComponent(finalKey)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isFirstLoad) onFirstLoad()
+        checkDefault()
+        save()
     }
 
 
-
+    @Deprecated("use constructor without 'parseColor'")
     constructor(
         plugin: JavaPlugin,
         name: String,
@@ -159,7 +222,80 @@ abstract class Config private constructor(
             }
         }
 
-        this.config = loadConfiguration(rawConfig, parseColor)
+        this.config = loadConfiguration(rawConfig)
+
+        if (parseLangComponent) {
+            config.getConfigurationSection("")!!.getKeys(true).forEach { key ->
+                var finalKey = key
+
+                when {
+                    key.endsWith(".message") -> {
+                        finalKey = finalKey.replace(".message", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+                    key.endsWith(".sound") -> {
+                        finalKey = finalKey.replace(".sound", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+                    key.endsWith(".sound.type") -> {
+                        finalKey = finalKey.replace(".sound.type", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+                    key.endsWith(".sound.volume") -> {
+                        finalKey = finalKey.replace(".sound.volume", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+                    key.endsWith(".sound.pitch") -> {
+                        finalKey = finalKey.replace(".sound.pitch", "")
+                        if (!langComponents.containsKey(finalKey)) {
+                            langComponents[finalKey] = config.getLangComponent(finalKey)
+                        }
+                    }
+                    else -> {
+                        if (config.isList(finalKey) || config.isString(finalKey)) {
+                            if (!langComponents.containsKey(finalKey)) {
+                                langComponents[finalKey] = config.getLangComponent(finalKey)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isFirstLoad) onFirstLoad()
+        checkDefault()
+        save()
+    }
+
+    constructor(
+        plugin: JavaPlugin,
+        name: String,
+        fromJar: Boolean = false,
+        parseLangComponent: Boolean = false
+    ): this(plugin.dataFolder, name) {
+        var isFirstLoad = false
+        if (!rawConfig.exists()) {
+            try {
+                if (fromJar) {
+                    plugin.saveResource(name, false)
+                } else {
+                    rawConfig.createNewFile()
+                }
+                isFirstLoad = true
+            } catch (e: IOException) {
+                throw RuntimeException(e)
+            }
+        }
+
+        this.config = loadConfiguration(rawConfig)
 
         if (parseLangComponent) {
             config.getConfigurationSection("")!!.getKeys(true).forEach { key ->
@@ -222,6 +358,15 @@ abstract class Config private constructor(
     }
 
     /**
+     * Возвращает [Component] из указанного путя в конфиге
+     *
+     * @return Объект [Component]
+     */
+    fun getComponent(path: String): Component {
+        return miniMessage.deserialize(config.getString(path)!!)
+    }
+
+    /**
      * Сохраняет конфиг
      */
     protected fun save() {
@@ -256,42 +401,10 @@ abstract class Config private constructor(
      * Перезагрузка конфига
      */
     open fun reload() {
-        this.config = loadConfiguration(rawConfig, true)
+        this.config = loadConfiguration(rawConfig)
     }
 
-    private fun loadConfiguration(file: File, parseColor: Boolean): YamlConfiguration {
-        Validate.notNull(file, "File cannot be null")
-        val config: YamlConfiguration = object : YamlConfiguration() {
-            override fun getString(path: String, def: String?): String? {
-                return if (parseColor) {
-                    ColorParser.parseColor(super.getString(path, def)!!)
-                } else {
-                    super.getString(path, def)
-                }
-            }
-
-            override fun getStringList(path: String): List<String> {
-                return if (parseColor) {
-                    super.getStringList(path).stream().map { message: String? ->
-                        ColorParser.parseColor(
-                            message!!
-                        )
-                    }.collect(Collectors.toList())
-                } else {
-                    super.getStringList(path)
-                }
-            }
-        }
-
-        try {
-            config.load(file)
-        } catch (ignore: FileNotFoundException) {
-        } catch (e: IOException) {
-            Bukkit.getLogger().log(Level.SEVERE, "Невозможно загрузить $file", e)
-        } catch (e: InvalidConfigurationException) {
-            Bukkit.getLogger().log(Level.SEVERE, "Невозможно загрузить $file", e)
-        }
-
-        return config
+    private fun loadConfiguration(file: File): YamlConfiguration {
+        return YamlConfiguration.loadConfiguration(file)
     }
 }

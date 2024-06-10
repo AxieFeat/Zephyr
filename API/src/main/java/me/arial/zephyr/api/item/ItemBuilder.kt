@@ -1,8 +1,12 @@
 package me.arial.zephyr.api.item
 
+import me.arial.zephyr.api.getComponent
+import me.arial.zephyr.api.getComponentList
 import me.arial.zephyr.api.menu.item.BasicItem
+import me.arial.zephyr.api.serializeComponent
 import me.arial.zephyr.api.text.ColorParser
 import me.arial.zephyr.api.text.LangComponent
+import net.kyori.adventure.text.Component
 import org.bukkit.*
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.enchantments.Enchantment
@@ -85,10 +89,34 @@ class ItemBuilder {
     }
 
     /**
+     * Установить имя для айтемстака
+     *
+     * @param name Имя
+     *
+     * @return Текущий объект [ItemBuilder]
+     */
+    fun name(name: Component?): ItemBuilder {
+        val meta = meta()
+            ?: return this
+
+        meta.displayName(name)
+
+        meta(meta)
+        return this
+    }
+
+    /**
      * @return Лор айтемстака
      */
     fun lore(): MutableList<String?> {
         return if ((meta() == null || meta()!!.lore == null)) ArrayList() else meta()!!.lore!!
+    }
+
+    /**
+     * @return Лор айтемстака
+     */
+    fun componentLore(): MutableList<Component?> {
+        return if ((meta() == null || meta()!!.lore() == null)) ArrayList() else meta()!!.lore()!!
     }
 
     /**
@@ -103,6 +131,23 @@ class ItemBuilder {
             ?: return this
 
         meta.lore = lore
+        meta(meta)
+
+        return this
+    }
+
+    /**
+     * Установить лор для айтемстака
+     *
+     * @param lore Лор
+     *
+     * @return Текущий объект [ItemBuilder]
+     */
+    fun componentLore(lore: List<Component>?): ItemBuilder {
+        val meta = meta()
+            ?: return this
+
+        meta.lore(lore)
         meta(meta)
 
         return this
@@ -125,6 +170,27 @@ class ItemBuilder {
 
         }
         meta.lore = old
+        meta(meta)
+
+        return this
+    }
+
+    /**
+     * Добавить строки для лора
+     *
+     * @param lore Строки
+     *
+     * @return Текущий объект [ItemBuilder]
+     */
+    fun addLore(vararg lore: Component?): ItemBuilder {
+        val meta = meta()
+            ?: return this
+
+        val old = componentLore()
+        for (line in lore) {
+            old.add(line)
+        }
+        meta.lore(old)
         meta(meta)
 
         return this
@@ -174,6 +240,27 @@ class ItemBuilder {
         Collections.reverse(toAdd)
         old.addAll(0, toAdd)
         meta.lore = old
+        meta(meta)
+
+        return this
+    }
+
+    /**
+     * Добавить строки для лора сверху
+     *
+     * @param lore Строки
+     *
+     * @return Текущий объект [ItemBuilder]
+     */
+    fun addLoreAbove(vararg lore: Component?): ItemBuilder {
+        val meta = meta()
+            ?: return this
+
+        val old = componentLore()
+        val toAdd = Arrays.asList(*lore)
+        toAdd.reverse()
+        old.addAll(0, toAdd)
+        meta.lore(old)
         meta(meta)
 
         return this
@@ -331,6 +418,7 @@ class ItemBuilder {
         }
 
         val hashAsId = UUID(base64.hashCode().toLong(), base64.hashCode().toLong())
+
         item = Bukkit.getUnsafe().modifyItemStack(
             item,
             "{SkullOwner:{Id:\"$hashAsId\",Properties:{textures:[{Value:\"$base64\"}]}}}"
@@ -357,8 +445,8 @@ class ItemBuilder {
         section["material"] = item!!.type.name
         val meta = meta()
         if (meta != null) {
-            section["name"] = meta.displayName
-            section["lore"] = meta.lore
+            section["name"] = "<reset>" + meta.displayName()?.serializeComponent()
+            section["lore"] = meta.lore()?.map { "<reset>" + it.serializeComponent() }
 
             if (meta is LeatherArmorMeta) {
                 val color = meta.color
@@ -384,17 +472,14 @@ class ItemBuilder {
          * Получение [ItemBuilder] из секции конфигурации
          *
          * @param section Секция конфигурации
-         * @param parseColor Парсить ли цвета
          *
          * @return Текущий объект [ItemBuilder]
          */
-        fun fromConfig(section: ConfigurationSection, parseColor: Boolean = true): ItemBuilder {
+        fun fromConfig(section: ConfigurationSection): ItemBuilder {
             val material = Material.valueOf(section.getString("material", "AIR")!!)
-            val name =
-                if (parseColor) ColorParser.parseColor(section.getString("name", "")!!) else section.getString("name", "")!!
+            val name = section.getComponent("name")
 
-            val lore: List<String> = if (parseColor) section.getStringList("lore").stream().map<Any>(ColorParser::parseColor)
-                .toList() as List<String> else section.getStringList("lore")
+            val lore: List<Component> = section.getComponentList("lore")
 
             var leatherColor: Color? = null
             if (section.contains("armor-color")) {
@@ -426,7 +511,7 @@ class ItemBuilder {
             return ItemBuilder(material)
                 .setHeadBase64(base64)
                 .name(name)
-                .lore(lore)
+                .componentLore(lore)
                 .flag(flags)
                 .glow(glow)
                 .setLeatherColor(leatherColor)
@@ -441,13 +526,13 @@ class ItemBuilder {
          *
          * @return Текущий объект [ItemBuilder]
          */
-        fun fromConfig(section: ConfigurationSection, transformer: Function<String?, String>): ItemBuilder {
+        fun fromConfig(section: ConfigurationSection, transformer: Function<Component?, Component>): ItemBuilder {
             val material = Material.valueOf(section.getString("material", "AIR")!!)
 
-            val name = transformer.apply(section.getString("name", ""))
+            val name = transformer.apply(section.getComponent("name", ""))
 
-            val lore = section.getStringList("lore").stream()
-                .map { line: String? ->
+            val lore = section.getComponentList("lore").stream()
+                .map { line: Component? ->
                     transformer.apply(
                         line
                     )
@@ -484,7 +569,7 @@ class ItemBuilder {
             return ItemBuilder(material)
                 .setHeadBase64(base64)
                 .name(name)
-                .lore(lore)
+                .componentLore(lore)
                 .flag(flags)
                 .glow(glow)
                 .setLeatherColor(leatherColor)
