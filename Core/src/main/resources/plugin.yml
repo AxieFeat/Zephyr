@@ -4,8 +4,6 @@ main: me.arial.zephyr.core.Zephyr
 author: "AxieFeat"
 api-version: 1.16
 load: POSTWORLD
-libraries:
-  - "net.kyori:adventure-text-minimessage:4.11.0"
 
 softdepend:
   - Vault

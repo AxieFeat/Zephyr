@@ -1,5 +1,6 @@
 package me.arial.zephyr.api.module
 
+import net.kyori.adventure.text.minimessage.MiniMessage
 import java.util.logging.LogManager
 import java.util.logging.Logger
 

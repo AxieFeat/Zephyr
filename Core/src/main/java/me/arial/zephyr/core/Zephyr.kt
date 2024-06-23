@@ -77,6 +77,7 @@ class Zephyr : ZephyrPlugin() {
                         val chatComponent: WrappedChatComponent = newPacket.chatComponents.read(0) ?: return
 
                         val playerMessageReceiveEvent = PlayerMessageReceiveEvent(e.player, chatComponent)
+                        Bukkit.getPluginManager().callEvent(playerMessageReceiveEvent)
 
                         if (playerMessageReceiveEvent.isCancelled) {
                             e.isCancelled = true

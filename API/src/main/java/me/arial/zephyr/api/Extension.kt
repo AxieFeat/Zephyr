@@ -35,7 +35,7 @@ import java.util.*
 import java.util.concurrent.Callable
 import java.util.regex.Pattern
 
-        private val miniMessage = MiniMessage.miniMessage()
+        private val miniMessage = MiniMessage.builder().build()
        // private val bukkitAudiences = BukkitAudiences.builder(ZephyrPlugin.instance).build()
 
         /**
