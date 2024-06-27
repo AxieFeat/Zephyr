@@ -4,7 +4,6 @@ import me.arial.zephyr.api.deserializeComponent
 import me.arial.zephyr.api.getComponent
 import me.arial.zephyr.api.getComponentList
 import me.arial.zephyr.api.serializeComponent
-import me.arial.zephyr.api.text.ColorParser
 import net.kyori.adventure.text.Component
 import org.bukkit.Bukkit
 import org.bukkit.Color

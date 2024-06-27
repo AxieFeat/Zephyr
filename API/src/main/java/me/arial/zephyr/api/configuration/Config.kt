@@ -4,6 +4,8 @@ import me.arial.zephyr.api.getLangComponent
 import me.arial.zephyr.api.module.ZephyrModule
 import me.arial.zephyr.api.text.LangComponent
 import net.kyori.adventure.text.Component
+import net.kyori.adventure.text.ComponentBuilder
+import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.plugin.java.JavaPlugin
@@ -363,7 +365,7 @@ abstract class Config private constructor(
      * @return Объект [Component]
      */
     fun getComponent(path: String): Component {
-        return miniMessage.deserialize(config.getString(path)!!)
+        return Component.text().build().decoration(TextDecoration.ITALIC, false).append(miniMessage.deserialize(config.getString(path)!!))
     }
 
     /**

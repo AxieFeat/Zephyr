@@ -6,11 +6,14 @@ import com.sk89q.worldedit.extent.clipboard.io.ClipboardFormats
 import com.sk89q.worldedit.function.operation.Operations
 import com.sk89q.worldedit.math.BlockVector3
 import com.sk89q.worldedit.session.ClipboardHolder
+import me.arial.zephyr.api.configuration.Config
+import me.arial.zephyr.api.configuration.Config.Companion
 import me.arial.zephyr.api.item.ItemBuilder
 import me.arial.zephyr.api.text.ColorParser
 import me.arial.zephyr.api.text.LangComponent
 import net.kyori.adventure.text.Component
 import net.kyori.adventure.text.TextReplacementConfig
+import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
 import org.bukkit.Location
 import org.bukkit.Sound
@@ -43,6 +46,7 @@ import java.util.regex.Pattern
          *
          * @param component Компонент для отправки
          */
+        @Deprecated("Dont use this", ReplaceWith("Player#sendMessage(component)"))
         fun Player.sendNativeComponent(component: Component) {
            // bukkitAudiences.player(this).sendMessage(component)
             this.sendMessage(component)
@@ -324,7 +328,7 @@ import java.util.regex.Pattern
  * @return Объект [Component]
  */
 fun FileConfiguration.getComponent(path: String): Component {
-            return miniMessage.deserialize(this.getString(path)!!)
+            return Component.text().build().decoration(TextDecoration.ITALIC, false).append(miniMessage.deserialize(this.getString(path)!!))
         }
 
 /**
@@ -335,7 +339,7 @@ fun FileConfiguration.getComponent(path: String): Component {
  * @return Лист [Component]'ов
  */
 fun FileConfiguration.getComponentList(path: String): List<Component> {
-    return this.getStringList(path).map { miniMessage.deserialize(it) }
+    return this.getStringList(path).map { Component.text().build().decoration(TextDecoration.ITALIC, false).append(miniMessage.deserialize(it)) }
 }
 
 /**
@@ -350,7 +354,7 @@ fun ConfigurationSection.getComponent(path: String?, def: String? = null): Compo
 
     val str = this.getString(path, def) ?: return null
 
-    return miniMessage.deserialize(str)
+    return Component.text().build().decoration(TextDecoration.ITALIC, false).append(miniMessage.deserialize(str))
 }
 
 /**
@@ -361,7 +365,7 @@ fun ConfigurationSection.getComponent(path: String?, def: String? = null): Compo
  * @return Лист [Component]'ов
  */
 fun ConfigurationSection.getComponentList(path: String): List<Component> {
-    return this.getStringList(path).map { miniMessage.deserialize(it) }
+    return this.getStringList(path).map { Component.text().build().decoration(TextDecoration.ITALIC, false).append(miniMessage.deserialize(it)) }
 }
 
 /**
@@ -370,7 +374,7 @@ fun ConfigurationSection.getComponentList(path: String): List<Component> {
  * @return Объект [Component]
  */
 fun String.deserializeComponent(): Component {
-    return miniMessage.deserialize(this)
+    return Component.text().build().decoration(TextDecoration.ITALIC, false).append(miniMessage.deserialize(this))
 }
 
 /**
@@ -561,7 +565,7 @@ fun Component.serializeComponent(): String {
                 .replace("&m", "<st>")
                 .replace("&n", "<u>")
                 .replace("&o", "<i>")
-                .replace("&r", "<white>")
+                .replace("&r", "<reset>")
         }
 
 /**
