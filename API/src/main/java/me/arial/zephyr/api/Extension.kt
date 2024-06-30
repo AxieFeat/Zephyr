@@ -12,9 +12,9 @@ import me.arial.zephyr.api.item.ItemBuilder
 import me.arial.zephyr.api.text.ColorParser
 import me.arial.zephyr.api.text.LangComponent
 import net.kyori.adventure.text.Component
-import net.kyori.adventure.text.TextReplacementConfig
 import net.kyori.adventure.text.format.TextDecoration
 import net.kyori.adventure.text.minimessage.MiniMessage
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer
 import org.bukkit.Location
 import org.bukkit.Sound
 import org.bukkit.command.CommandSender
@@ -39,6 +39,7 @@ import java.util.concurrent.Callable
 import java.util.regex.Pattern
 
         private val miniMessage = MiniMessage.builder().build()
+        private val jsonSerializer = GsonComponentSerializer.builder().build()
        // private val bukkitAudiences = BukkitAudiences.builder(ZephyrPlugin.instance).build()
 
         /**
@@ -148,11 +149,9 @@ import java.util.regex.Pattern
          * @return Изменённый Component
          */
         fun Component.replace(old: String, new: String): Component {
-            return replaceText(
-                TextReplacementConfig.builder().match(
-                    Pattern.compile(old)
-                ).replacement(new).build()
-            )
+            val json = jsonSerializer.serialize(this)
+
+            return jsonSerializer.deserialize(json.replace(old, new))
         }
 
         /**
@@ -164,11 +163,9 @@ import java.util.regex.Pattern
          * @return Изменённый Component
          */
         fun Component.replaceWithParse(old: String, new: String): Component {
-            return replaceText(
-                TextReplacementConfig.builder().match(
-                    Pattern.compile(old)
-                ).replacement(miniMessage.deserialize(new)).build()
-            )
+            val json = jsonSerializer.serialize(this)
+
+            return jsonSerializer.deserialize(json.replace(old, jsonSerializer.serialize(miniMessage.deserialize(new))))
         }
 
         /**
