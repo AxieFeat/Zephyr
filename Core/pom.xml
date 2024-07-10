@@ -50,12 +50,52 @@
                             <finalName>Zephyr</finalName>
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
-<!--                            <relocations>-->
-<!--                                <relocation>-->
-<!--                                    <pattern>net.kyori.</pattern>-->
-<!--                                    <shadedPattern>me.arial.zephyr.libs.kyori.</shadedPattern>-->
-<!--                                </relocation>-->
-<!--                            </relocations>-->
+                            <relocations>
+                                <relocation>
+                                    <pattern>xyz.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.xyz.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.org.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>net.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.net.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>me.kodysimpson.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.me.kodysimpson.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>me.lucko.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.me.lucko.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>kotlin.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.kotlin.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javax.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.javax.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>javassist.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.javassist.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>io.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.io.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>dev.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.dev.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.com.</shadedPattern>
+                                </relocation>
+                            </relocations>
                         </configuration>
                     </execution>
                 </executions>
