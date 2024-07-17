@@ -29,6 +29,10 @@ class ItemBuilder {
         private set
 
 
+    /**
+     * @param item Предмет
+     * @param pure Копировать ли этот предмет
+     */
     constructor(item: ItemStack?, pure: Boolean) {
         if (item == null) {
             this.item = ItemStack(Material.AIR)
@@ -37,10 +41,18 @@ class ItemBuilder {
         }
     }
 
+    /**
+     * @param item Предмет
+     */
     constructor(item: ItemStack?) {
         this.item = item
     }
 
+    /**
+     * Создаёт предмет с указанным материалом
+     *
+     * @param material Материал
+     */
     constructor(material: Material?) {
         this.item = ItemStack(material!!)
     }

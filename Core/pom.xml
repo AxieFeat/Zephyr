@@ -51,49 +51,108 @@
                             <shadedArtifactAttached>true</shadedArtifactAttached>
                             <createDependencyReducedPom>false</createDependencyReducedPom>
                             <relocations>
+
+
                                 <relocation>
-                                    <pattern>xyz.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.xyz.</shadedPattern>
+                                    <pattern>xyz.xenondevs.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.xyz.xenondevs.</shadedPattern>
+                                </relocation>
+
+
+                                <relocation>
+                                    <pattern>org.apache.commons.lang3.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.org.apache.commons.lang3.</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>org.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.org.</shadedPattern>
+                                    <pattern>org.checkerframework.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.org.checkerframework.</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>net.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.net.</shadedPattern>
+                                    <pattern>org.objenesis.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.org.objenesis.</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>me.kodysimpson.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.me.kodysimpson.</shadedPattern>
+                                    <pattern>org.slf4j.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.org.slf4j.</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>me.lucko.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.me.lucko.</shadedPattern>
+                                    <pattern>org.yaml.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.org.yaml.</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>kotlin.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.kotlin.</shadedPattern>
+                                    <pattern>org.jdbi.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.org.jdbi.</shadedPattern>
+                                </relocation>
+
+
+                                <relocation>
+                                    <pattern>net.arial.axiom.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.net.arial.axiom.</shadedPattern>
+                                </relocation>
+
+
+                                <relocation>
+                                    <pattern>me.kodysimpson.simpapi.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.me.kodysimpson.simpapi.</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>javax.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.javax.</shadedPattern>
+                                    <pattern>me.lucko.commodore.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.me.lucko.commodore.</shadedPattern>
                                 </relocation>
+
+
+                                <relocation>
+                                    <pattern>javax.annotation.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.javax.annotation.</shadedPattern>
+                                </relocation>
+
+
                                 <relocation>
                                     <pattern>javassist.</pattern>
                                     <shadedPattern>me.arial.zephyr.libs.javassist.</shadedPattern>
                                 </relocation>
+
+
                                 <relocation>
-                                    <pattern>io.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.io.</shadedPattern>
+                                    <pattern>io.leangen.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.io.leangen</shadedPattern>
+                                </relocation>
+
+
+                                <relocation>
+                                    <pattern>dev.jorel.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.dev.jorel.</shadedPattern>
+                                </relocation>
+
+
+
+                                <relocation>
+                                    <pattern>com.esotericsoftware.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.com.esotericsoftware.</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>dev.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.dev.</shadedPattern>
+                                    <pattern>com.fasterxml.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.com.fasterxml.</shadedPattern>
                                 </relocation>
                                 <relocation>
-                                    <pattern>com.</pattern>
-                                    <shadedPattern>me.arial.zephyr.libs.com.</shadedPattern>
+                                    <pattern>com.github.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.com.github.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com..</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.com..</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google.errorprone.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.com.google.errorprone.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.jeff_media.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.com.jeff_media.</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.zaxxer.</pattern>
+                                    <shadedPattern>me.arial.zephyr.libs.com.zaxxer.</shadedPattern>
                                 </relocation>
                             </relocations>
                         </configuration>

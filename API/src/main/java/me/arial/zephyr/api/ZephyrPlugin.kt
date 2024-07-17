@@ -38,18 +38,13 @@ abstract class ZephyrPlugin : JavaPlugin() {
 
     protected abstract fun enable()
     protected abstract fun disable()
-    protected abstract fun reload()
 
     abstract val registeredModuleCommands: MutableList<Pair<ZephyrModule, Any>>
     abstract fun createModuleCommandManagerInstanceFor(module: ZephyrModule): ZephyrModuleCommandManager
     abstract fun getZephyrModuleCommandManager(module: ZephyrModule): ZephyrModuleCommandManager?
     abstract fun removeZephyrModuleCommandManager(module: ZephyrModule)
 
-    override fun onEnable() {
-        enable()
-    }
+    override fun onEnable() = enable()
+    override fun onDisable() = disable()
 
-    override fun onDisable() {
-        disable()
-    }
 }

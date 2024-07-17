@@ -65,27 +65,9 @@ abstract class ZephyrCommand : Command("") {
                     }
                 }
 
-//                Packet(
-//                    type = PacketType.COMMAND_EXECUTOR,
-//                    content = arrayOf(
-//                        "sender ${sender.name}",
-//                        "alias $alias",
-//                        "args ${(args ?: arrayOf(" ")).toList().toString().cut(150)}"
-//                    )
-//                ).send()
-
                 return true
             }
         }
-
-//        Packet(
-//            type = PacketType.COMMAND_EXECUTOR,
-//            content = arrayOf(
-//                "sender ${sender.name}",
-//                "alias $alias",
-//                "args ${(args ?: arrayOf(" ")).toList().toString().cut(150)}"
-//            )
-//        ).send()
 
         return true
     }
@@ -105,27 +87,9 @@ abstract class ZephyrCommand : Command("") {
                     if (it.key.advancedArgs) args.parseArgs() else args
                 ) as MutableList<String>
 
-//                Packet(
-//                    type = PacketType.COMMAND_COMPLETER,
-//                    content = arrayOf(
-//                        "sender ${sender.name}",
-//                        "alias $alias",
-//                        "result $result"
-//                    )
-//                ).send()
-
                 return result
             }
         }
-
-//        Packet(
-//            type = PacketType.COMMAND_COMPLETER,
-//            content = arrayOf(
-//                "sender ${sender.name}",
-//                "alias $alias",
-//                "result"
-//            )
-//        ).send()
 
         return mutableListOf()
     }

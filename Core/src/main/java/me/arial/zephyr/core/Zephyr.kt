@@ -45,6 +45,7 @@ class Zephyr : ZephyrPlugin() {
 
         System.setProperty("zephyr", "enabled")
 
+        CommandAPI.onLoad(CommandAPIBukkitConfig(this).silentLogs(true).dispatcherFile(File(dataFolder, "command.json")))
         CommandAPI.onEnable()
 
         zephyrCommandManager = ZephyrCommandManagerImpl()
@@ -93,10 +94,6 @@ class Zephyr : ZephyrPlugin() {
         }
     }
 
-    override fun onLoad() {
-        CommandAPI.onLoad(CommandAPIBukkitConfig(this).silentLogs(true).dispatcherFile(File(dataFolder, "command.json")))
-    }
-
     override fun disable() {
         zephyrModuleManager.loadedModules().forEach {
             zephyrModuleManager.unloadModule(it.value)
@@ -105,10 +102,6 @@ class Zephyr : ZephyrPlugin() {
         zephyrCommandManager.registeredCommands.forEach {
             (it.value as Command).unregister(Bukkit.getCommandMap())
         }
-    }
-
-    override fun reload() {
-
     }
 
     override val registeredModuleCommands: MutableList<Pair<ZephyrModule, Any>> = mutableListOf()
